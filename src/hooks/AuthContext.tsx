@@ -1,5 +1,4 @@
 import React, { createContext, useCallback, useContext, useState } from 'react';
-import { string } from 'yup/lib/locale';
 import api from '../services/api';
 
 interface SignInCredential {
@@ -10,6 +9,7 @@ interface SignInCredential {
 interface AuthContextData {
   user: object;
   signIn(credential: SignInCredential): Promise<void>;
+  signOut(): void;
 }
 
 interface AuthState {
@@ -44,8 +44,15 @@ export const AuthProvider: React.FC = ({ children }) => {
     setData({ token, user });
   }, []);
 
+  const signOut = useCallback(() => {
+    localStorage.removeItemI('@Gobarber:token');
+    localStorage.removeItemI('@Gobarber:user');
+
+    setData({} as AuthState);
+  }, []);
+
   return (
-    <AuthContext.Provider value={{ user: data.user, signIn }}>
+    <AuthContext.Provider value={{ user: data.user, signIn, signOut }}>
       {children}
     </AuthContext.Provider>
   );
