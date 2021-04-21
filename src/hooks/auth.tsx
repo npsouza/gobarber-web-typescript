@@ -5,6 +5,7 @@ interface User {
   id: string;
   name: string;
   avatar_url: string;
+  email: string;
 }
 
 interface SignInCredential {
@@ -16,6 +17,7 @@ interface AuthContextData {
   user: User;
   signIn(credential: SignInCredential): Promise<void>;
   signOut(): void;
+  updateUser(user: User): void;
 }
 
 interface AuthState {
@@ -60,8 +62,22 @@ export const AuthProvider: React.FC = ({ children }) => {
     setData({} as AuthState);
   }, []);
 
+  const updateUser = useCallback(
+    (user: User) => {
+      localStorage.setItem('@Gobarber:user', JSON.stringify(user));
+
+      setData({
+        token: data.token,
+        user,
+      });
+    },
+    [data.token],
+  );
+
   return (
-    <AuthContext.Provider value={{ user: data.user, signIn, signOut }}>
+    <AuthContext.Provider
+      value={{ user: data.user, signIn, signOut, updateUser }}
+    >
       {children}
     </AuthContext.Provider>
   );
