@@ -136,7 +136,6 @@ export const NextAppointment = styled.div`
 
     strong {
       margin-left: 24px;
-      font-size: 28px;
       color: #fff;
     }
 
